@@ -1,6 +1,8 @@
 package br.com.iagolaguna.senior.challange.db;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class City {

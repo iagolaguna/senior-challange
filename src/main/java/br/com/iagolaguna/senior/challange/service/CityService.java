@@ -12,14 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -114,6 +111,8 @@ public class CityService {
     public List<City> getExtremeCities() {
         GrahamPoint gpa = null;
         GrahamPoint gpb = null;
+        GrahamPoint finalGpa = gpa;
+        GrahamPoint finalGpb = gpb;
         double majorDistance = 0;
         List<City> cities = cityRepository.findAll();
         List<GrahamPoint> points = cities.stream()
@@ -131,10 +130,6 @@ public class CityService {
                 }
             }
         }
-
-
-        GrahamPoint finalGpa = gpa;
-        GrahamPoint finalGpb = gpb;
 
         City a = cities.stream()
                 .filter(city -> city.getLat().equals(finalGpa.getY()) && city.getLon().equals(finalGpa.getX()))

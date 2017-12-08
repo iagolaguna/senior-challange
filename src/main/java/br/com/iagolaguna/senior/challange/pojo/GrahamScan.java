@@ -1,11 +1,6 @@
 package br.com.iagolaguna.senior.challange.pojo;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  *
