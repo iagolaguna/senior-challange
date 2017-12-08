@@ -28,9 +28,11 @@ public class IntegrationAPI {
         try {
             File fileSaved = integrationService.saveMultipartFile(file);
             cityService.parseCsvFileToData(fileSaved);
+            return ResponseEntity.ok(new DefaultResponse(HttpStatus.OK,"cities imported with success."));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new DefaultResponse(HttpStatus.CREATED,"imported with success."));
+
+        return null;
     }
 }

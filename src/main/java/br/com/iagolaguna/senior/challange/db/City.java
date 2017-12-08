@@ -1,12 +1,12 @@
 package br.com.iagolaguna.senior.challange.db;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 @Entity
 public class City {
     @Id
+
     private Integer id;
-    private String uf;
     private String name;
     private String noAccents;
     private String alternativeNames;
@@ -15,13 +15,15 @@ public class City {
     private boolean capital;
     private Double lat;
     private Double lon;
+    @ManyToOne
+    private State state;
 
     public City() {
     }
 
-    public City(Integer id, String uf, String name, String noAccents, String alternativeNames, String microregion, String mesoregion, boolean capital, Double lat, Double lon) {
+    public City(Integer id,  String name, String noAccents, String alternativeNames,
+                String microregion, String mesoregion, boolean capital, Double lat, Double lon,State state) {
         this.id = id;
-        this.uf = uf;
         this.name = name;
         this.noAccents = noAccents;
         this.alternativeNames = alternativeNames;
@@ -30,6 +32,7 @@ public class City {
         this.capital = capital;
         this.lat = lat;
         this.lon = lon;
+        this.state = state;
     }
 
     public Integer getId() {
@@ -38,14 +41,6 @@ public class City {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
     }
 
     public String getName() {
@@ -110,5 +105,13 @@ public class City {
 
     public void setLon(Double lon) {
         this.lon = lon;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }
