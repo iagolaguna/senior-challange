@@ -5,6 +5,7 @@ import br.com.iagolaguna.senior.challange.db.CityRepository;
 import br.com.iagolaguna.senior.challange.db.State;
 import br.com.iagolaguna.senior.challange.db.StateRepository;
 import br.com.iagolaguna.senior.challange.pojo.CityByStateDto;
+import br.com.iagolaguna.senior.challange.pojo.GrahamPoint;
 import br.com.iagolaguna.senior.challange.pojo.GrahamScan;
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
@@ -111,9 +112,45 @@ public class CityService {
     }
 
     public List<City> getExtremeCities() {
-//        List<City> cities = cityRepository.findAll();
-//       List<Point> point2DS = cities.stream().map(city -> new Point(city.getLon(),city.getLat())).collect(Collectors.toList());
-        //TODO resolver com GrahamScan
-        throw new NotImplementedException();
+        GrahamPoint gpa = null;
+        GrahamPoint gpb = null;
+        double majorDistance = 0;
+        List<City> cities = cityRepository.findAll();
+        List<GrahamPoint> points = cities.stream()
+                .map(city -> new GrahamPoint(city.getLon(), city.getLat()))
+                .collect(Collectors.toList());
+        List<GrahamPoint> convexPoints = GrahamScan.getConvexHull(points);
+        List<GrahamPoint> secondPoints = new ArrayList<GrahamPoint>(convexPoints);
+        for (GrahamPoint point : convexPoints) {
+            for (GrahamPoint secondPoint : secondPoints) {
+                double distance =distanceTo(point.getX(), point.getY(), secondPoint.getX(), secondPoint.getY());
+                if (distance > majorDistance) {
+                    majorDistance = distance;
+                    gpa = point;
+                    gpb = secondPoint;
+                }
+            }
+        }
+
+
+        GrahamPoint finalGpa = gpa;
+        GrahamPoint finalGpb = gpb;
+
+        City a = cities.stream()
+                .filter(city -> city.getLat().equals(finalGpa.getY()) && city.getLon().equals(finalGpa.getX()))
+                .findFirst().get();
+
+        City b = cities.stream().
+                filter(city -> city.getLat().equals(finalGpb.getY()) && city.getLon().equals(finalGpb.getX()))
+                .findFirst().get();
+        return new ArrayList<City>() {{
+            add(a);
+            add(b);
+        }};
     }
+
+    public double distanceTo(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    }
+
 }
