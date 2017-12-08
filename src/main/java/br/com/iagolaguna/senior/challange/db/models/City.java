@@ -1,4 +1,4 @@
-package br.com.iagolaguna.senior.challange.db;
+package br.com.iagolaguna.senior.challange.db.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,8 +1,9 @@
 package br.com.iagolaguna.senior.challange.api;
 
-import br.com.iagolaguna.senior.challange.db.City;
+import br.com.iagolaguna.senior.challange.db.models.City;
 import br.com.iagolaguna.senior.challange.pojo.CityByStateDto;
 import br.com.iagolaguna.senior.challange.pojo.DefaultResponse;
+import br.com.iagolaguna.senior.challange.pojo.SizeDto;
 import br.com.iagolaguna.senior.challange.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +13,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import java.util.List;
 
 @RestController
@@ -20,6 +28,9 @@ public class CityAPI {
 
     @Autowired
     CityService cityService;
+
+    @PersistenceContext
+    private EntityManager em;
 
     // requisito 8
     @RequestMapping(value = "/{cityId}", method = RequestMethod.DELETE)
@@ -72,14 +83,14 @@ public class CityAPI {
 
     // requisito 4
     @RequestMapping(value = "/cities-for-state", method = RequestMethod.GET)
-    public List<CityByStateDto> findQuantityOfCityForState() {
-        return cityService.findQuantityOfCityForState();
+    public List<CityByStateDto> countCitiesByState() {
+        return cityService.countCitiesByState();
     }
 
     // requisito 11
     @RequestMapping(value = "/size", method = RequestMethod.GET)
-    public Long getQuantity() {
-        return cityService.quantityOfCities();
+    public ResponseEntity<SizeDto> getQuantity() {
+        return ResponseEntity.ok(new SizeDto(cityService.quantityOfCities()));
     }
 
     // requisito 3
@@ -87,23 +98,37 @@ public class CityAPI {
     public ResponseEntity<List<CityByStateDto>> majorAndMirrorStatesWithCities() {
         return ResponseEntity.ok(cityService.majorAndMirrorStatesWithCities());
     }
-    //TODO requisito 10
-    @RequestMapping(value = "/{column}")
+
+    // requisito 10
+    @RequestMapping(value = "distinct/{column}")
     public ResponseEntity<Long> getQuantityOfRecordsByColumn(@PathVariable("column") String column) {
         if (StringUtils.isEmpty(column)) {
             return ResponseEntity.badRequest().body(null);
         }
-//        return ResponseEntity.ok(cityService.getSizeRecordsByColumn(column));
-        throw new NotImplementedException();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> result = cb.createQuery(Long.class);
+            Path<Object> columnDatabase = result.from(City.class).get(column);
+            Expression<Long> query = cb.countDistinct(columnDatabase);
+            return ResponseEntity.ok(em.createQuery(result.select(query)).getSingleResult());
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     //TODO requisito 9
     @RequestMapping(value = "/{column}/{filter}", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getValuesFromCsvColumn(@PathVariable("column") String column, @PathVariable("filter") String filter) {
+        //usando mongo ficaria
+        //mongoTemplate.find(new Query(Criteria.where("nome do field").regex("string")).fields().include("nome do file"),City.class)
+        //se não isso algo beeem similar
+
+        //isso é errado
         throw new NotImplementedException();
     }
 
-    //TODO requisito 12
+    //requisito 12
     @RequestMapping(value = "/extremes", method = RequestMethod.GET)
     public ResponseEntity<List<City>> getExtremeCities() {
         return ResponseEntity.ok(cityService.getExtremeCities());

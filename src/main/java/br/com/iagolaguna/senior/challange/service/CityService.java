@@ -1,9 +1,9 @@
 package br.com.iagolaguna.senior.challange.service;
 
-import br.com.iagolaguna.senior.challange.db.City;
-import br.com.iagolaguna.senior.challange.db.CityRepository;
-import br.com.iagolaguna.senior.challange.db.State;
-import br.com.iagolaguna.senior.challange.db.StateRepository;
+import br.com.iagolaguna.senior.challange.db.models.City;
+import br.com.iagolaguna.senior.challange.db.repositories.CityRepository;
+import br.com.iagolaguna.senior.challange.db.models.State;
+import br.com.iagolaguna.senior.challange.db.repositories.StateRepository;
 import br.com.iagolaguna.senior.challange.pojo.CityByStateDto;
 import br.com.iagolaguna.senior.challange.pojo.GrahamPoint;
 import br.com.iagolaguna.senior.challange.pojo.GrahamScan;
@@ -83,8 +83,8 @@ public class CityService {
         return cityRepository.findNameByState(state);
     }
 
-    public List<CityByStateDto> findQuantityOfCityForState() {
-        return cityRepository.findQuantityOfCitiesForState();
+    public List<CityByStateDto> countCitiesByState() {
+        return cityRepository.countCitiesByState();
     }
 
     public Long quantityOfCities() {
@@ -96,10 +96,10 @@ public class CityService {
     }
 
     public List<CityByStateDto> majorAndMirrorStatesWithCities() {
-        CityByStateDto max = cityRepository.findQuantityOfCitiesForState().stream()
+        CityByStateDto max = cityRepository.countCitiesByState().stream()
                 .max(Comparator.comparingLong(CityByStateDto::getQuantity)).get();
 
-        CityByStateDto min = cityRepository.findQuantityOfCitiesForState().stream()
+        CityByStateDto min = cityRepository.countCitiesByState().stream()
                 .min(Comparator.comparingLong(CityByStateDto::getQuantity)).get();
 
         return new ArrayList<CityByStateDto>() {{

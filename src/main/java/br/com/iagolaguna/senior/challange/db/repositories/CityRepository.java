@@ -1,5 +1,7 @@
-package br.com.iagolaguna.senior.challange.db;
+package br.com.iagolaguna.senior.challange.db.repositories;
 
+import br.com.iagolaguna.senior.challange.db.models.City;
+import br.com.iagolaguna.senior.challange.db.models.State;
 import br.com.iagolaguna.senior.challange.pojo.CityByStateDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,7 @@ public interface CityRepository extends JpaRepository<City, Integer> {
     List<String> findNameByState(State state);
 
     @Query("select new br.com.iagolaguna.senior.challange.pojo.CityByStateDto(c.state.uf, count(c.state) as quantity) from City c  group by c.state")
-    List<CityByStateDto> findQuantityOfCitiesForState();
+    List<CityByStateDto> countCitiesByState();
 
 //    @Query("select count(distinct(?1)) from City")
 //    Long countDifferentValuesFromOneCollumn(String columnName);

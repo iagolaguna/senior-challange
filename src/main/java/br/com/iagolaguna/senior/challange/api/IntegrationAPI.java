@@ -34,8 +34,8 @@ public class IntegrationAPI {
             return ResponseEntity.ok(new DefaultResponse(HttpStatus.OK,"cities imported with success."));
         } catch (IOException e) {
             e.printStackTrace();
+            return ResponseEntity.ok(new DefaultResponse(HttpStatus.BAD_REQUEST,"can't possible to import csv of cities"));
         }
 
-        return null;
     }
 }
