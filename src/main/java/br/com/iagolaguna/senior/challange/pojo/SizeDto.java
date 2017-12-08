@@ -2,21 +2,19 @@ package br.com.iagolaguna.senior.challange.pojo;
 
 public class SizeDto {
 
-    private int size;
+    private Long size;
 
 
-    public SizeDto(Long aLong) {
-    }
 
-    public SizeDto(int size) {
+    public SizeDto(Long size) {
         this.size = size;
     }
 
-    public int getSize() {
+    public Long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 }
