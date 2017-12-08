@@ -22,7 +22,7 @@ public class IntegrationAPI {
 
     @Autowired
     private CityService cityService;
-
+    // requisito 1
     @RequestMapping(value = "/import-cities", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity importCities(@RequestParam("file") MultipartFile file) {
         try {

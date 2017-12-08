@@ -5,21 +5,21 @@ import br.com.iagolaguna.senior.challange.db.CityRepository;
 import br.com.iagolaguna.senior.challange.db.State;
 import br.com.iagolaguna.senior.challange.db.StateRepository;
 import br.com.iagolaguna.senior.challange.pojo.CityByStateDto;
+import br.com.iagolaguna.senior.challange.pojo.GrahamScan;
 import com.opencsv.CSVReader;
-import org.hibernate.Criteria;
-import org.hibernate.internal.CriteriaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CityService {
@@ -40,7 +40,7 @@ public class CityService {
                 header.put(column, i++);
             }
 
-            reader.forEach(line -> saveCity(header,line));
+            reader.forEach(line -> saveCity(header, line));
         } catch (Exception e) {
             e.printStackTrace();
             LOG.error(e.getMessage(), e);
@@ -50,7 +50,7 @@ public class CityService {
 
     private void saveCity(Map<String, Integer> header, String[] line) {
         String uf = line[header.get("uf")];
-        State state =  new State(uf);
+        State state = new State(uf);
         stateRepository.save(state);
 
         int ibgeId = Integer.parseInt(line[header.get("ibge_id")]);
@@ -64,7 +64,7 @@ public class CityService {
         double lon = Double.parseDouble(line[header.get("lon")]);
         double lat = Double.parseDouble(line[header.get("lat")]);
 
-        City city = new City(ibgeId,name,noAccents,alternativeNames,microregion,mesoregion,capital,lon,lat,state);
+        City city = new City(ibgeId, name, noAccents, alternativeNames, microregion, mesoregion, capital, lon, lat, state);
         cityRepository.save(city);
     }
 
@@ -85,15 +85,35 @@ public class CityService {
         return cityRepository.findNameByState(state);
     }
 
-    public List<CityByStateDto> findQuantityOfCityForState(){
+    public List<CityByStateDto> findQuantityOfCityForState() {
         return cityRepository.findQuantityOfCitiesForState();
     }
 
-    public Long quantityOfCities(){
+    public Long quantityOfCities() {
         return cityRepository.count();
     }
 
-    public void saveNewCity(City city){
+    public void saveNewCity(City city) {
         cityRepository.save(city);
+    }
+
+    public List<CityByStateDto> majorAndMirrorStatesWithCities() {
+        CityByStateDto max = cityRepository.findQuantityOfCitiesForState().stream()
+                .max(Comparator.comparingLong(CityByStateDto::getQuantity)).get();
+
+        CityByStateDto min = cityRepository.findQuantityOfCitiesForState().stream()
+                .min(Comparator.comparingLong(CityByStateDto::getQuantity)).get();
+
+        return new ArrayList<CityByStateDto>() {{
+            add(max);
+            add(min);
+        }};
+    }
+
+    public List<City> getExtremeCities() {
+//        List<City> cities = cityRepository.findAll();
+//       List<Point> point2DS = cities.stream().map(city -> new Point(city.getLon(),city.getLat())).collect(Collectors.toList());
+        //TODO resolver com GrahamScan
+        throw new NotImplementedException();
     }
 }

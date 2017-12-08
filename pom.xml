@@ -16,6 +16,7 @@
         <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
         <opencsv.version>3.9</opencsv.version>
         <mysql.version>6.0.6</mysql.version>
+        <rtree.version>0.8.0.2</rtree.version>
     </properties>
 
     <dependencies>
@@ -38,6 +39,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rtree</artifactId>
+            <version>${rtree.version}</version>
         </dependency>
     </dependencies>
 
