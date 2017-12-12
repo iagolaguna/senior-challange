@@ -123,8 +123,6 @@ public class CityAPI {
         //usando mongo ficaria
         //mongoTemplate.find(new Query(Criteria.where("nome do field").regex("string")).fields().include("nome do file"),City.class)
         //se não isso algo beeem similar
-
-        //isso é errado
         throw new NotImplementedException();
     }
 
