@@ -100,7 +100,7 @@ public class CityAPI {
     }
 
     // requisito 10
-    @RequestMapping(value = "distinct/{column}")
+    @RequestMapping(value = "distinct/{column}", method = RequestMethod.GET)
     public ResponseEntity<Long> getQuantityOfRecordsByColumn(@PathVariable("column") String column) {
         if (StringUtils.isEmpty(column)) {
             return ResponseEntity.badRequest().body(null);

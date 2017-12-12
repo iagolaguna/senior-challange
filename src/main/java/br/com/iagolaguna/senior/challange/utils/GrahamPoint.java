@@ -1,4 +1,4 @@
-package br.com.iagolaguna.senior.challange.pojo;
+package br.com.iagolaguna.senior.challange.utils;
 
 public  class GrahamPoint {
 
